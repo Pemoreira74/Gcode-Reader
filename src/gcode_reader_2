@@ -1,0 +1,94 @@
+# gcode_reader.py
+
+import argparse
+from enum import Enum
+
+class GcodeType(Enum):
+    """Enum for G-Code file types."""
+    FDM_REGULAR = 1
+    FDM_STRATASYS = 2
+    LPBF_REGULAR = 3
+    LPBF_SCODE = 4
+
+class GcodeReader:
+    """Class for reading and processing G-Code files."""
+
+    def __init__(self, gcode_file, file_type):
+        self.gcode_file = gcode_file
+        self.file_type = GcodeType(file_type)
+        self._read_gcode()
+
+    def _read_gcode(self):
+        """Read G-Code file based on file type."""
+        if self.file_type == GcodeType.FDM_REGULAR:
+            self._read_fdm_regular()
+        elif self.file_type == GcodeType.FDM_STRATASYS:
+            self._read_fdm_stratasys()
+        elif self.file_type == GcodeType.LPBF_REGULAR:
+            self._read_lpbf_regular()
+        elif self.file_type == GcodeType.LPBF_SCODE:
+            self._read_lpbf_scode()
+        else:
+            raise ValueError(f"Unsupported file type: {self.file_type}")
+
+    def _read_fdm_regular(self):
+        """Read FDM regular G-Code file."""
+        # Implementation for reading FDM regular G-Code
+        pass
+
+    def _read_fdm_stratasys(self):
+        """Read Stratasys FDM G-Code file."""
+        # Implementation for reading Stratasys FDM G-Code
+        pass
+
+    def _read_lpbf_regular(self):
+        """Read regular LPBF G-Code file."""
+        # Implementation for reading regular LPBF G-Code
+        pass
+
+    def _read_lpbf_scode(self):
+        """Read Scode LPBF G-Code file."""
+        # Implementation for reading Scode LPBF G-Code
+        pass
+
+    def plot(self, low_layer, high_layer):
+        """Plot part from low_layer to high_layer."""
+        print(f"Plotting part from layer {low_layer} to {high_layer}.")
+
+    def mesh(self, low_layer, high_layer):
+        """Mesh the part and plot the mesh from low_layer to high_layer."""
+        print(f"Plotting mesh of part from layer {low_layer} to {high_layer}.")
+
+    def animate(self, low_layer, high_layer):
+        """Animate the printing of part from low_layer to high_layer."""
+        print(f"Animating printing of part from layer {low_layer} to {high_layer}.")
+
+def parse_arguments():
+    """Parse command-line arguments."""
+    parser = argparse.ArgumentParser(description='G-Code Reader')
+    parser.add_argument(dest='gcode_file', action='store', help='Path of the input G-Code file')
+    parser.add_argument('-t', '--type', dest='file_type', type=int, default=1, choices=[1,2,3,4],
+                        help='1: Regular FDM; 2: Stratasys FDM; 3: Regular LPBF; 4: Scode LPBF')
+    parser.add_argument('-lo', '--low', dest='low_layer', type=int, default=1, help='Lowest layer number')
+    parser.add_argument('-hi', '--high', dest='high_layer', type=int, default=10000, help='Highest layer number')
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("-p", "--plot", action="store_true", help='Plot the part')
+    group.add_argument("-a", "--animate", action="store_true", help='Animate the printing process')
+    group.add_argument("-m", "--mesh", action="store_true", help='Plot the meshing of the path')
+    parser.add_argument('-s', '--save', dest='out_file', type=str, action='store', help='Path of output file')
+    return parser.parse_args()
+
+def main():
+    """Main function."""
+    args = parse_arguments()
+    gcode_reader = GcodeReader(args.gcode_file, args.file_type)
+
+    if args.plot:
+        gcode_reader.plot(args.low_layer, args.high_layer)
+    elif args.mesh:
+        gcode_reader.mesh(args.low_layer, args.high_layer)
+    elif args.animate:
+        gcode_reader.animate(args.low_layer, args.high_layer)
+
+if __name__ == "__main__":
+    main()
